@@ -3,7 +3,6 @@ module github.com/nathanjms/slackbot-go
 go 1.23.4
 
 require (
-	github.com/coro/verifyslack v0.0.0-20230221171938-1276b8a398de
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/lmittmann/tint v1.0.7
