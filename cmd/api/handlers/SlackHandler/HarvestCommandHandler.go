@@ -17,7 +17,7 @@ const (
 	CommandTypeWorst = "worst"
 )
 
-func CommandHandler(app *application.Application) echo.HandlerFunc {
+func HarvestCommandHandler(app *application.Application) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		command := c.FormValue("command")
 		if command != "/harvest" {

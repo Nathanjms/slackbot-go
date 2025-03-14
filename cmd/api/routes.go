@@ -11,13 +11,13 @@ import (
 
 func InitRoutes(e *echo.Echo, app *application.Application) {
 	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]interface{}{
+		return c.JSON(http.StatusOK, map[string]any{
 			"success": true,
 			"message": "Hello, World!",
 		})
 	})
 	e.GET("status", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]interface{}{
+		return c.JSON(http.StatusOK, map[string]any{
 			"success": true,
 			"message": "OK",
 		})
@@ -28,6 +28,6 @@ func InitRoutes(e *echo.Echo, app *application.Application) {
 	slack.Use(middleware.VerifySlackMiddleware(app))
 
 	// // User Routes
-	slack.POST("/harvest", SlackHandler.CommandHandler(app))
+	slack.POST("/harvest", SlackHandler.HarvestCommandHandler(app))
 
 }
