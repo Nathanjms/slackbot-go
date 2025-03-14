@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nathanjms/slackbot-go/cmd/api/handlers/SlackHandler"
+	"github.com/nathanjms/slackbot-go/cmd/api/middleware"
 	"github.com/nathanjms/slackbot-go/internal/application"
 )
 
@@ -23,12 +24,10 @@ func InitRoutes(e *echo.Echo, app *application.Application) {
 	})
 
 	// --- SLACK ROUTES ---
-	authed := e.Group("")
-	// TODO: ADD SLACK MIDDLEWARE
-	// authed.Use(middleware.JWTAuthMiddleware(app))
+	slack := e.Group("/slack")
+	slack.Use(middleware.VerifySlackMiddleware(app))
 
 	// // User Routes
-	authed.POST("slack/harvest", SlackHandler.CommandHandler(app))
-	// authed.DELETE("user", UserHandler.DeleteAccountHandler(app))
+	slack.POST("/harvest", SlackHandler.CommandHandler(app))
 
 }

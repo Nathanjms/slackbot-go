@@ -3,40 +3,70 @@ package SlackHandler
 import (
 	"fmt"
 	"net/http"
-	"time"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/nathanjms/slackbot-go/internal/application"
 	"github.com/slack-go/slack"
 )
 
+// Command types are "test", "list", "worst":
+const (
+	CommandTypeTest  = "test"
+	CommandTypeList  = "list"
+	CommandTypeWorst = "worst"
+)
+
 func CommandHandler(app *application.Application) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Return text "test"
-
-		attachment := slack.Attachment{
-			Pretext: "Super Bot Message",
-			Text:    "some text",
-			Color:   "4af030",
-			Fields: []slack.AttachmentField{
-				{
-					Title: "Date",
-					Value: time.Now().String(),
-				},
-			},
+		command := c.FormValue("command")
+		if command != "/harvest" {
+			return c.String(http.StatusOK, "Invalid Command Option!")
 		}
 
-		_, timestamp, err := app.SlackClient.PostMessage(
-			app.Config.SlackConfig.ChannelID,
-			slack.MsgOptionAttachments(attachment),
-		)
+		text := strings.TrimSpace(c.FormValue("text"))
+		fmt.Println(text)
 
-		if err != nil {
-			return err
+		// Handle the commands
+		if text == CommandTypeTest {
+			_, _, err := app.SlackClient.PostMessage(
+				app.Config.SlackConfig.ChannelID,
+				slack.MsgOptionText("Testing...", false),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			return c.NoContent(http.StatusOK)
 		}
 
-		fmt.Printf("Message sent at %s", timestamp)
+		if text == CommandTypeList {
+			_, _, err := app.SlackClient.PostMessage(
+				app.Config.SlackConfig.ChannelID,
+				slack.MsgOptionText("List", false),
+			)
 
-		return c.NoContent(http.StatusOK)
+			if err != nil {
+				return err
+			}
+
+			return c.NoContent(http.StatusOK)
+		}
+
+		if text == CommandTypeWorst {
+			_, _, err := app.SlackClient.PostMessage(
+				app.Config.SlackConfig.ChannelID,
+				slack.MsgOptionText("Worst", false),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			return c.NoContent(http.StatusOK)
+		}
+
+		return c.String(http.StatusOK, "Invalid Command Option!")
 	}
 }

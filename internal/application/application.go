@@ -12,8 +12,9 @@ type Config struct {
 	HTTPPort    int
 	Env         string
 	SlackConfig struct {
-		ChannelID string
-		Token     string
+		ChannelID     string
+		Token         string
+		SigningSecret string
 	}
 }
 
@@ -46,6 +47,7 @@ func initConfig() Config {
 	cfg.HTTPPort = env.GetInt("PORT", 3000)
 	cfg.SlackConfig.ChannelID = env.GetString("SLACK_CHANNEL_ID", "")
 	cfg.SlackConfig.Token = env.GetString("SLACK_AUTH_TOKEN", "")
+	cfg.SlackConfig.SigningSecret = env.GetString("SLACK_SIGNING_SECRET", "")
 
 	return cfg
 }
